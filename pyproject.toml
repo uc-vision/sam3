@@ -123,5 +123,3 @@ python_files = "test_*.py"
 python_classes = "Test*"
 python_functions = "test_*"
 
-[tool.hatchling.build.targets.wheel.shared-data]
-"assets" = "assets"
