@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools>=61", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
 name = "sam3"
-dynamic = ["version"]
+version = "0.1.0"
 description = "SAM3 (Segment Anything Model 3) implementation"
 readme = "README.md"
 requires-python = ">=3.8"
@@ -26,7 +26,7 @@ classifiers = [
 ]
 dependencies = [
     "timm>=1.0.17",
-    "numpy==1.26",
+    "numpy",
     "tqdm",
     "ftfy==6.1.1",
     "regex",
@@ -59,7 +59,6 @@ notebooks = [
     "ipycanvas",
     "ipympl",
     "pycocotools",
-    "decord",
     "opencv-python",
     "einops",
     "scikit-image",
@@ -81,12 +80,6 @@ train = [
 [project.urls]
 "Homepage" = "https://github.com/facebookresearch/sam3"
 "Bug Tracker" = "https://github.com/facebookresearch/sam3/issues"
-
-[tool.setuptools]
-packages = ["sam3", "sam3.model"]
-
-[tool.setuptools.dynamic]
-version = {attr = "sam3.__version__"}
 
 [tool.black]
 line-length = 88
