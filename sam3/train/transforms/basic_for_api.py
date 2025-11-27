@@ -209,8 +209,8 @@ def resize(datapoint, index, size, max_size=None, square=False, v2=False):
         )
         obj.bbox = scaled_boxes
         obj.area *= ratio_width * ratio_height
-        if obj.segment is not None:
-            obj.segment = F.resize(obj.segment[None, None], size).squeeze()
+        if obj.segment is not None and isinstance(obj.segment, torch.Tensor):
+            obj.segment = F.resize(obj.segment.unsqueeze(0).unsqueeze(0), size).squeeze()
 
     for query in datapoint.find_queries:
         if query.semantic_target is not None:
@@ -814,7 +814,7 @@ def random_mosaic_frame(
         target_W_im_downsize = target_x_offset_e - target_x_offset_b
 
         segment_downsize = F.resize(
-            obj.segment[None, None],
+            obj.segment.unsqueeze(0).unsqueeze(0),
             size=(target_H_im_downsize, target_W_im_downsize),
             interpolation=InterpolationMode.BILINEAR,
             antialias=True,  # antialiasing for downsizing
@@ -1256,11 +1256,12 @@ class ResizeToMaxIfAbove:
             datapoint.images[index].data = F.resize(datapoint.images[index].data, size)
 
             for obj in datapoint.images[index].objects:
-                obj.segment = F.resize(
-                    obj.segment[None, None],
-                    size,
-                    interpolation=InterpolationMode.NEAREST,
-                ).squeeze()
+                if obj.segment is not None and isinstance(obj.segment, torch.Tensor):
+                    obj.segment = F.resize(
+                        obj.segment.unsqueeze(0).unsqueeze(0),
+                        size,
+                        interpolation=InterpolationMode.NEAREST,
+                    ).squeeze()
 
             h, w = size
             datapoint.images[index].size = (h, w)
